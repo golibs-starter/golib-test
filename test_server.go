@@ -14,7 +14,7 @@ func WithHeader(key string, value string) ResponseOpt {
 	}
 }
 
-func NewHttpServer(httpStatus int, responseBody string, responseOpts ...ResponseOpt) *httptest.Server {
+func NewHttpTestServer(httpStatus int, responseBody string, responseOpts ...ResponseOpt) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(httpStatus)
 		if len(responseOpts) > 0 {
