@@ -10,14 +10,18 @@ import (
 )
 
 type RestAssured struct {
-	t    *testing.T
-	resp *http.Response
+	t        *testing.T
+	resp     *http.Response
+	respBody string
 }
 
 func NewRestAssured(t *testing.T, resp *http.Response) *RestAssured {
+	respBody, err := ioutil.ReadAll(resp.Body)
+	assert.NoError(t, err)
 	return &RestAssured{
-		t:    t,
-		resp: resp,
+		t:        t,
+		resp:     resp,
+		respBody: string(respBody),
 	}
 }
 
@@ -32,9 +36,7 @@ func (r *RestAssured) Header(key string, expected interface{}) *RestAssured {
 }
 
 func (r *RestAssured) Body(key string, expected interface{}) *RestAssured {
-	byteBody, err := ioutil.ReadAll(r.resp.Body)
-	assert.NoError(r.t, err)
-	v := gjson.Get(string(byteBody), key)
+	v := gjson.Get(r.respBody, key)
 	assert.EqualValues(r.t, expected, v.Value(), fmt.Sprintf("Expected value of key %v is %v, but got: %v", key, expected, v.Value()))
 	return r
 }
