@@ -7,9 +7,8 @@ import (
 )
 
 type HttpClient struct {
-	t       *testing.T
-	client  *http.Client
-	request *http.Request
+	t      *testing.T
+	client *http.Client
 }
 
 func NewHttpClient(t *testing.T, client *http.Client) *HttpClient {
@@ -19,21 +18,15 @@ func NewHttpClient(t *testing.T, client *http.Client) *HttpClient {
 	}
 }
 
-func NewDefaultHttpClient(t *testing.T, request *http.Request) *HttpClient {
+func NewDefaultHttpClient(t *testing.T) *HttpClient {
 	return &HttpClient{
-		t:       t,
-		client:  &http.Client{},
-		request: request,
+		t:      t,
+		client: &http.Client{},
 	}
 }
 
-func (h *HttpClient) WithRequest(request *http.Request) *HttpClient {
-	h.request = request
-	return h
-}
-
-func (h *HttpClient) Do() *http.Response {
-	resp, err := h.client.Do(h.request)
+func (h *HttpClient) Do(request *http.Request) *http.Response {
+	resp, err := h.client.Do(request)
 	assert.NoError(h.t, err)
 	return resp
 }
