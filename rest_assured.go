@@ -1,6 +1,7 @@
 package golibtest
 
 import (
+	"encoding/json"
 	"fmt"
 	assert "github.com/stretchr/testify/require"
 	"github.com/tidwall/gjson"
@@ -39,4 +40,21 @@ func (r *RestAssured) Body(key string, expected interface{}) *RestAssured {
 	v := gjson.Get(r.respBody, key)
 	assert.EqualValues(r.t, expected, v.Value(), fmt.Sprintf("Expected value of key %v is %v, but got: %v", key, expected, v.Value()))
 	return r
+}
+
+func (r *RestAssured) BodyCb(key string, expectedFn func(value interface{})) *RestAssured {
+	v := gjson.Get(r.respBody, key)
+	expectedFn(v.Value())
+	return r
+}
+
+func (r *RestAssured) ExtractString() string {
+	return r.respBody
+}
+
+func (r *RestAssured) ExtractJsonKey(key string, result interface{}) {
+	assert.NotNil(r.t, result)
+	v := gjson.Get(r.respBody, key)
+	err := json.Unmarshal([]byte(v.String()), result)
+	assert.NoError(r.t, err)
 }
