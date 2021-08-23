@@ -248,6 +248,8 @@ github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9dec
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 gitlab.id.vin/vincart/golib v0.2.1 h1:9dw9i0csS74DPm+YOsi9QMccPcVmzewRa+nGF8Rh4b8=
 gitlab.id.vin/vincart/golib v0.2.1/go.mod h1:PnPiVEgKumQNkR+YW5S0oIQtqH8f+59k0i5Kq/zlaLQ=
+gitlab.id.vin/vincart/golib v0.2.6 h1:6rOAeQvz07V8cBIJctImB+jvQz7DqwBsEF4FCK9w4ao=
+gitlab.id.vin/vincart/golib v0.2.6/go.mod h1:B4UbJ9E5BzBkQA6v+4mdbnBzMBDvzEuaVDSKMlXQy9s=
 go.etcd.io/etcd/api/v3 v3.5.0/go.mod h1:cbVKeC6lCfl7j/8jBhAK6aIYO9XOjdptoxU/nLQcPvs=
 go.etcd.io/etcd/client/pkg/v3 v3.5.0/go.mod h1:IJHfcCEKxYu1Os13ZdwCwIUTUVGYTSAM3YSwc9/Ac1g=
 go.etcd.io/etcd/client/v2 v2.305.0/go.mod h1:h9puh54ZTgAKtEbut2oe9P4L/oqKCVB6xsXlzd7alYQ=
