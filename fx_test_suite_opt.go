@@ -47,12 +47,10 @@ func WithFxOption(opt fx.Option) TsOption {
 	}
 }
 
-func WithInvokeStart(invokeStart func(done func()) fx.Option) TsOption {
+func WithInvokeStart(invokeStart func(done func(err error)) fx.Option) TsOption {
 	return func(ts *FxTestSuite) {
-		ts.invokeStart = invokeStart(func() {
-			if ts.ready != nil {
-				ts.ready <- true
-			}
+		ts.invokeStart = invokeStart(func(err error) {
+			ts.readyError <- err
 		})
 	}
 }
