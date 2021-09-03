@@ -33,8 +33,8 @@ func NewFxTestSuite(bootstrap []fx.Option, options ...TsOption) *FxTestSuite {
 		tsOption(&ts)
 	}
 	ReplaceFxOption(
-		golib.PropertiesAutoConfig(),
-		fx.Provide(ts.NewNewPropertiesLoader),
+		golib.PropertiesOpt(),
+		fx.Provide(ts.NewPropertiesLoader),
 	)(&ts)
 	return &ts
 }
@@ -98,7 +98,7 @@ func (s *FxTestSuite) invokePrepare() fx.Option {
 	})
 }
 
-func (s *FxTestSuite) NewNewPropertiesLoader(in golib.PropertiesLoaderIn) (config.Loader, error) {
+func (s *FxTestSuite) NewPropertiesLoader(in golib.PropertiesLoaderIn) (config.Loader, error) {
 	return golib.NewPropertiesLoader(in,
 		golib.WithActiveProfiles(s.profiles),
 		golib.WithPaths([]string{
