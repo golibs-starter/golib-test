@@ -47,6 +47,10 @@ func WithFxOption(opt fx.Option) TsOption {
 	}
 }
 
+func WithFxPopulate(targets ...interface{}) TsOption {
+	return WithFxOption(fx.Populate(targets...))
+}
+
 func WithInvokeStart(invokeStart func(done func(err error)) fx.Option) TsOption {
 	return func(ts *FxTestSuite) {
 		ts.invokeStart = invokeStart(func(err error) {
