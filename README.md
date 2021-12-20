@@ -8,4 +8,4 @@ See [GoLib Instruction](https://gitlab.com/golibs-starter/golib/-/blob/develop/R
 
 ### Testing example
 
-All example in the `testing` directory of [golib-sample](https://gitlab.id.vin/vincart/golib-sample)
+All example in the `testing` directory of [golib-sample](https://gitlab.com/golibs-starter/golib-sample)
