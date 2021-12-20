@@ -6,4 +6,6 @@ Testing stuff for Golang project.
 
 See [GoLib Instruction](https://gitlab.com/golibs-starter/golib/-/blob/develop/README.md)
 
-> TODO Add more instructions
+### Testing example
+
+All example in the `testing` directory of [golib-sample](https://gitlab.com/golibs-starter/golib-sample)
