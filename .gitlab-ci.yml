@@ -1,0 +1,9 @@
+image: golang:1.17-alpine
+
+stages:
+  - test
+
+verify:
+  stage: test
+  script:
+    - go test ./...
