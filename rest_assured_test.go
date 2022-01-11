@@ -2,11 +2,10 @@ package golibtest
 
 import (
 	"net/http"
-	"net/http/httptest"
 	"testing"
 )
 
-func httpHandlerTest(w *httptest.ResponseRecorder, r *http.Request) {
+func httpHandlerTest(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(`{"status": "OK"}`))
 }
