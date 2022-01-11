@@ -5,5 +5,8 @@ stages:
 
 verify:
   stage: test
+  except:
+    refs:
+      - tags
   script:
     - go test ./...
