@@ -1,8 +1,8 @@
 package golibtest
 
 import (
-	"gitlab.id.vin/vincart/golib"
-	"gitlab.id.vin/vincart/golib/config"
+	"gitlab.com/golibs-starter/golib"
+	"gitlab.com/golibs-starter/golib/config"
 	"go.uber.org/fx"
 	"strings"
 )
