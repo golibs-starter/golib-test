@@ -1,21 +1,38 @@
 package golibtest
 
 import (
+	"gitlab.id.vin/vincart/golib"
+	"gitlab.id.vin/vincart/golib/config"
 	"go.uber.org/fx"
 	"strings"
 )
+
+var DefaultTestingProfile = "testing"
 
 type TsOption func(ts *FxTestSuite)
 
 func WithTestingDir(dir string) TsOption {
 	return func(ts *FxTestSuite) {
-		ts.testingDir = dir
+		dir = strings.Trim(dir, "/")
+		if dir == "" {
+			return
+		}
+		ts.configPaths = []string{
+			"../" + dir + "/" + config.DefaultConfigPath,
+			dir + "/" + config.DefaultConfigPath,
+		}
+	}
+}
+
+func WithConfigPaths(paths []string) TsOption {
+	return func(ts *FxTestSuite) {
+		ts.configPaths = paths
 	}
 }
 
 func WithActiveProfiles(profiles ...string) TsOption {
 	return func(ts *FxTestSuite) {
-		ts.profiles = profiles
+		ts.options = append(ts.options, golib.ProvidePropsOption(golib.WithActiveProfiles(profiles)))
 	}
 }
 

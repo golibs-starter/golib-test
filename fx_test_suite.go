@@ -16,7 +16,7 @@ import (
 
 type FxTestSuite struct {
 	suite.Suite
-	testingDir  string
+	configPaths []string
 	profiles    []string
 	options     []fx.Option
 	invokeStart fx.Option
@@ -28,14 +28,20 @@ type FxTestSuite struct {
 func NewFxTestSuite(bootstrap []fx.Option, options ...TsOption) *FxTestSuite {
 	ts := FxTestSuite{readyError: make(chan error)}
 	ts.options = bootstrap
-	ts.profiles = []string{"testing"}
 	for _, tsOption := range options {
 		tsOption(&ts)
 	}
-	ReplaceFxOption(
-		golib.PropertiesOpt(),
-		fx.Provide(ts.NewPropertiesLoader),
-	)(&ts)
+	if len(ts.profiles) == 0 {
+		ts.profiles = []string{DefaultTestingProfile}
+	}
+	if len(ts.configPaths) == 0 {
+		ts.configPaths = []string{
+			"../" + config.DefaultConfigPath, // root config
+			config.DefaultConfigPath,         // testing directory config
+		}
+	}
+	ts.options = append(ts.options, golib.ProvidePropsOption(golib.WithActiveProfiles(ts.profiles)))
+	ts.options = append(ts.options, golib.ProvidePropsOption(golib.WithPaths(ts.configPaths)))
 	return &ts
 }
 
@@ -96,16 +102,6 @@ func (s *FxTestSuite) invokePrepare() fx.Option {
 		s.baseUrl = fmt.Sprintf("http://localhost:%d", s.port)
 		return nil
 	})
-}
-
-func (s *FxTestSuite) NewPropertiesLoader(in golib.PropertiesLoaderIn) (config.Loader, error) {
-	return golib.NewPropertiesLoader(in,
-		golib.WithActiveProfiles(s.profiles),
-		golib.WithPaths([]string{
-			"../" + s.testingDir + "/config",
-			s.testingDir + "/config",
-		}),
-	)
 }
 
 func (s *FxTestSuite) TearDownSuite() {
