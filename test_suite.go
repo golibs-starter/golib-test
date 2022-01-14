@@ -10,20 +10,8 @@ import (
 )
 
 type TestSuite struct {
-	db         *gorm.DB
+	DB         *gorm.DB
 	jwtSignKey *rsa.PrivateKey
-}
-
-func NewTestSuite(db *gorm.DB, jwtProperties *JwtTestProperties) *TestSuite {
-	testSuite := &TestSuite{
-		db: db,
-	}
-	testSuite.loadJwtPrivateKey(jwtProperties)
-	return testSuite
-}
-
-func (ts *TestSuite) DB() *gorm.DB {
-	return ts.db
 }
 
 func (ts *TestSuite) CreateJwtToken(userId string) string {
@@ -42,7 +30,7 @@ func (ts *TestSuite) CreateJwtToken(userId string) string {
 	return jwtToken
 }
 
-func (ts *TestSuite) loadJwtPrivateKey(jwtProperties *JwtTestProperties) {
+func (ts *TestSuite) LoadJwtPrivateKey(jwtProperties *JwtTestProperties) {
 	signKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(jwtProperties.PrivateKey))
 	if err != nil {
 		log.Fatalf("Could not load jwt private key: %v", err)
@@ -52,14 +40,14 @@ func (ts *TestSuite) loadJwtPrivateKey(jwtProperties *JwtTestProperties) {
 
 func (ts *TestSuite) TruncateTables(tables []string) {
 	for _, table := range tables {
-		if err := ts.db.Exec(fmt.Sprintf("TRUNCATE TABLE `%s`", table)).Error; err != nil {
+		if err := ts.DB.Exec(fmt.Sprintf("TRUNCATE TABLE `%s`", table)).Error; err != nil {
 			log.Fatalf("Could not truncate table %s: %v", table, err)
 		}
 	}
 }
 
 func (ts *TestSuite) Seed(model interface{}) {
-	if err := ts.db.Create(model).Error; err != nil {
+	if err := ts.DB.Create(model).Error; err != nil {
 		log.Fatalf("Could not create seed data, model: %v, err: %v")
 	}
 }
