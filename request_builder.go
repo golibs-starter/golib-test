@@ -2,6 +2,7 @@ package golibtest
 
 import (
 	"bytes"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"net/http"
@@ -86,7 +87,8 @@ func (r *RequestBuilder) BearerToken(token string) *RequestBuilder {
 
 // BasicAuth set basic auth credentials to request builder
 func (r *RequestBuilder) BasicAuth(username string, password string) *RequestBuilder {
-	r.BasicAuth(username, password)
+	token := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", username, password)))
+	r.Header("Authorization", fmt.Sprintf("Basic %s", token))
 	return r
 }
 
