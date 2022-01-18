@@ -1,9 +1,7 @@
 package golibtest
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/require"
-	"github.com/tidwall/gjson"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -45,7 +43,6 @@ func (r *RestAssured) Header(key string, expected interface{}) *RestAssured {
 // Body assert json body in response
 // Read https://github.com/tidwall/gjson for more information about path syntax
 func (r *RestAssured) Body(key string, expected interface{}) *RestAssured {
-	v := gjson.Get(r.responseRecorder.Body.String(), key)
-	require.EqualValues(r.t, expected, v.Value(), fmt.Sprintf("Expected value of key %v is %v, but got: %v", key, expected, v.Value()))
+	NewJsonAssured(r.t, r.responseRecorder.Body.String()).Has(key, expected)
 	return r
 }
