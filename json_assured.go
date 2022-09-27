@@ -18,6 +18,10 @@ func NewJsonAssured(t *testing.T, message string) *JsonAssured {
 	return &JsonAssured{t: t, message: message}
 }
 
+func (k *JsonAssured) Get(key string) interface{} {
+	return gjson.Get(k.message, key).Value()
+}
+
 // Has ...
 func (k *JsonAssured) Has(key string, expected interface{}) *JsonAssured {
 	v := gjson.Get(k.message, key)

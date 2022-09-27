@@ -3,12 +3,13 @@ module gitlab.com/golibs-starter/golib-test
 go 1.14
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/stretchr/testify v1.7.0
+	github.com/google/uuid v1.3.0 // indirect
+	github.com/pkg/errors v0.9.1
+	github.com/stretchr/testify v1.8.0
 	github.com/tidwall/gjson v1.8.1
-	gitlab.com/golibs-starter/golib v0.9.14-beta
-	gitlab.com/golibs-starter/golib-message-bus v0.1.5-beta
-	gitlab.com/golibs-starter/golib-migrate v0.0.5-beta
-	go.uber.org/fx v1.13.1
-	gorm.io/gorm v1.22.3
+	gitlab.com/golibs-starter/golib v0.12.0
+	go.uber.org/fx v1.18.1
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
+	golang.org/x/sys v0.0.0-20211013075003-97ac67df715c // indirect
+	golang.org/x/text v0.3.7 // indirect
 )

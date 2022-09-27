@@ -22,7 +22,7 @@ func NewRestAssured(t *testing.T) *RestAssured {
 	}
 }
 
-// When create an new request builder
+// When create a new request builder
 func (r *RestAssured) When() *RequestBuilder {
 	r.requestBuilder = NewRequestBuilder(r)
 	return r.requestBuilder
@@ -44,5 +44,10 @@ func (r *RestAssured) Header(key string, expected interface{}) *RestAssured {
 // Read https://github.com/tidwall/gjson for more information about path syntax
 func (r *RestAssured) Body(key string, expected interface{}) *RestAssured {
 	NewJsonAssured(r.t, r.responseRecorder.Body.String()).Has(key, expected)
+	return r
+}
+
+func (r *RestAssured) BodyCb(key string, expectedFn func(value interface{})) *RestAssured {
+	expectedFn(NewJsonAssured(r.t, r.responseRecorder.Body.String()).Get(key))
 	return r
 }
