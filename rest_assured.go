@@ -2,6 +2,7 @@ package golibtest
 
 import (
 	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -19,6 +20,12 @@ type RestAssured struct {
 func NewRestAssured(t *testing.T) *RestAssured {
 	return &RestAssured{
 		t: t,
+	}
+}
+
+func NewRestAssuredSuite(t suite.TestingSuite) *RestAssured {
+	return &RestAssured{
+		t: t.T(),
 	}
 }
 
