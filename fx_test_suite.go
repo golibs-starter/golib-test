@@ -54,6 +54,6 @@ func (s *FxTestSuite) SetupApp() {
 	}
 
 	var err error
-	s.app, err = SetupTestApp(s.fxOptions)
+	s.app, err = SetupFxApp(s.T(), s.fxOptions)
 	s.Require().NoError(err, "Error when setup test app")
 }
