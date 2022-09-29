@@ -1,60 +1,60 @@
 package golibtest
 
 import (
-	"encoding/json"
-	"fmt"
-	assert "github.com/stretchr/testify/require"
-	"github.com/tidwall/gjson"
-	"io/ioutil"
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
+// RestAssured represent rest assertion
 type RestAssured struct {
-	t        *testing.T
-	resp     *http.Response
-	respBody string
+	t                *testing.T
+	requestBuilder   *RequestBuilder
+	request          *http.Request
+	responseRecorder *httptest.ResponseRecorder
 }
 
-func NewRestAssured(t *testing.T, resp *http.Response) *RestAssured {
-	respBody, err := ioutil.ReadAll(resp.Body)
-	assert.NoError(t, err)
+// NewRestAssured return a new instance of RestAssured
+func NewRestAssured(t *testing.T) *RestAssured {
 	return &RestAssured{
-		t:        t,
-		resp:     resp,
-		respBody: string(respBody),
+		t: t,
 	}
 }
 
-func (r *RestAssured) Status(httpStatusCode int) *RestAssured {
-	assert.Equal(r.t, httpStatusCode, r.resp.StatusCode)
+func NewRestAssuredSuite(t suite.TestingSuite) *RestAssured {
+	return &RestAssured{
+		t: t.T(),
+	}
+}
+
+// When create a new request builder
+func (r *RestAssured) When() *RequestBuilder {
+	r.requestBuilder = NewRequestBuilder(r)
+	return r.requestBuilder
+}
+
+// Status assert http status code
+func (r *RestAssured) Status(expected int) *RestAssured {
+	require.Equal(r.t, expected, r.responseRecorder.Code)
 	return r
 }
 
+// Header assert http header
 func (r *RestAssured) Header(key string, expected interface{}) *RestAssured {
-	assert.EqualValues(r.t, expected, r.resp.Header.Get(key))
+	require.EqualValues(r.t, expected, r.responseRecorder.Header().Get(key))
 	return r
 }
 
+// Body assert json body in response
+// Read https://github.com/tidwall/gjson for more information about path syntax
 func (r *RestAssured) Body(key string, expected interface{}) *RestAssured {
-	v := gjson.Get(r.respBody, key)
-	assert.EqualValues(r.t, expected, v.Value(), fmt.Sprintf("Expected value of key %v is %v, but got: %v", key, expected, v.Value()))
+	NewJsonAssured(r.t, r.responseRecorder.Body.String()).Has(key, expected)
 	return r
 }
 
 func (r *RestAssured) BodyCb(key string, expectedFn func(value interface{})) *RestAssured {
-	v := gjson.Get(r.respBody, key)
-	expectedFn(v.Value())
+	expectedFn(NewJsonAssured(r.t, r.responseRecorder.Body.String()).Get(key))
 	return r
-}
-
-func (r *RestAssured) ExtractString() string {
-	return r.respBody
-}
-
-func (r *RestAssured) ExtractJsonKey(key string, result interface{}) {
-	assert.NotNil(r.t, result)
-	v := gjson.Get(r.respBody, key)
-	err := json.Unmarshal([]byte(v.String()), result)
-	assert.NoError(r.t, err)
 }
