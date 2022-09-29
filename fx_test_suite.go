@@ -39,6 +39,10 @@ func (s *FxTestSuite) Populate(targets ...interface{}) {
 	s.Option(fx.Populate(targets...))
 }
 
+func (s *FxTestSuite) Decorate(decorators ...interface{}) {
+	s.Option(fx.Decorate(decorators...))
+}
+
 func (s *FxTestSuite) Provide(constructors ...interface{}) {
 	s.Option(fx.Provide(constructors...))
 }
