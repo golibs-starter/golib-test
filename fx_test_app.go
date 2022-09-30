@@ -2,6 +2,7 @@ package golibtest
 
 import (
 	"context"
+	"fmt"
 	"github.com/pkg/errors"
 	"gitlab.com/golibs-starter/golib/log"
 	"go.uber.org/fx"
@@ -9,21 +10,18 @@ import (
 	"testing"
 )
 
-func SetupFxApp(tb testing.TB, options []fx.Option) (*fx.App, error) {
+func RequireFxApp(options ...fx.Option) *fx.App {
+	app, err := StartFxApp(options...)
+	if err != nil {
+		panic(fmt.Errorf("error when setup test app: [%v]", err))
+	}
+	return app
+}
+
+func StartFxApp(options ...fx.Option) (*fx.App, error) {
 	// We need add RegisterHttpHandlerOnStartOpt here
 	// to ensure this will invoke at last
 	options = append(options, RegisterHttpHandlerOnStartOpt())
-
-	if tb != nil {
-		// Wrap current logger with testing logger
-		options = append(options, WrapTestingLoggerOpt(tb))
-
-		app := fxtest.New(tb, options...)
-		if err := app.Start(context.Background()); err != nil {
-			return nil, errors.WithMessage(err, "Error when start fxtest app")
-		}
-		return app.App, nil
-	}
 
 	app := fx.New(options...)
 	if err := app.Err(); err != nil {
@@ -33,6 +31,32 @@ func SetupFxApp(tb testing.TB, options []fx.Option) (*fx.App, error) {
 		return nil, errors.WithMessage(err, "Error when start fx app")
 	}
 	return app, nil
+}
+
+func RequireFxAppT(tb testing.TB, options ...fx.Option) *fx.App {
+	app, err := StartFxAppT(tb, options...)
+	if err != nil {
+		panic(fmt.Errorf("error when setup test app: [%v]", err))
+	}
+	return app
+}
+
+func StartFxAppT(tb testing.TB, options ...fx.Option) (*fx.App, error) {
+	options = append(
+		options,
+		// Wrap current logger with testing logger
+		WrapTestingLoggerOpt(tb),
+
+		// We need add RegisterHttpHandlerOnStartOpt here
+		// to ensure this will invoke at last
+		RegisterHttpHandlerOnStartOpt(),
+	)
+
+	app := fxtest.New(tb, options...)
+	if err := app.Start(context.Background()); err != nil {
+		return nil, errors.WithMessage(err, "Error when start fxtest app")
+	}
+	return app.App, nil
 }
 
 func WrapTestingLoggerOpt(tb testing.TB) fx.Option {

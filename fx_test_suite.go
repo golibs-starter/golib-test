@@ -51,13 +51,13 @@ func (s *FxTestSuite) Invoke(funcs ...interface{}) {
 	s.Option(fx.Invoke(funcs...))
 }
 
-func (s *FxTestSuite) SetupApp() {
+func (s *FxTestSuite) StartApp() {
 	// Apply all TsConfig
 	for _, tsOption := range s.tsOptions {
 		tsOption(s)
 	}
 
 	var err error
-	s.app, err = SetupFxApp(s.T(), s.fxOptions)
+	s.app, err = StartFxAppT(s.T(), s.fxOptions...)
 	s.Require().NoError(err, "Error when setup test app")
 }
