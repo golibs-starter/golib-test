@@ -21,7 +21,7 @@ func RequireFxApp(options ...fx.Option) *fx.App {
 func StartFxApp(options ...fx.Option) (*fx.App, error) {
 	// We need add RegisterHttpHandlerOnStartOpt here
 	// to ensure this will invoke at last
-	options = append(options, RegisterHttpHandlerOnStartOpt())
+	//options = append(options, RegisterHttpHandlerOnStartOpt())
 
 	app := fx.New(options...)
 	if err := app.Err(); err != nil {
@@ -49,7 +49,7 @@ func StartFxAppT(tb testing.TB, options ...fx.Option) (*fx.App, error) {
 
 		// We need add RegisterHttpHandlerOnStartOpt here
 		// to ensure this will invoke at last
-		RegisterHttpHandlerOnStartOpt(),
+		//RegisterHttpHandlerOnStartOpt(),
 	)
 
 	app := fxtest.New(tb, options...)

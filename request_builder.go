@@ -109,6 +109,6 @@ func (r *RequestBuilder) Then() *RestAssured {
 	r.Header("Content-Type", "application/json")
 	r.ra.request = r.Build()
 	r.ra.responseRecorder = httptest.NewRecorder()
-	handler(r.ra.responseRecorder, r.ra.request)
+	httpServer.Handler.ServeHTTP(r.ra.responseRecorder, r.ra.request)
 	return r.ra
 }
