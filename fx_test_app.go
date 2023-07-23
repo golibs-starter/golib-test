@@ -60,20 +60,16 @@ func StartFxAppT(tb testing.TB, options ...fx.Option) (*fx.App, error) {
 }
 
 func WrapTestingLoggerOpt(tb testing.TB) fx.Option {
-	return fx.Decorate(fx.Annotate(
-		func(oldLogger log.Logger) (coreLogger log.Logger, webLogger log.Logger, err error) {
-			var testingLogger *log.TestingLogger
-			if defaultLogger, ok := oldLogger.(*log.DefaultLogger); ok {
-				testingLogger = log.NewTestingLoggerFromDefault(tb, defaultLogger)
-			} else {
-				if testingLogger, err = log.NewTestingLogger(tb, &log.Options{CallerSkip: 2}); err != nil {
-					return nil, nil, errors.WithMessage(err, "init testing logger failed")
-				}
+	return fx.Decorate(func(oldLogger log.Logger) (log.Logger, error) {
+		var err error
+		var testingLogger *log.TestingLogger
+		if defaultLogger, ok := oldLogger.(*log.ZapLogger); ok {
+			testingLogger = log.NewTestingLoggerFromDefault(tb, defaultLogger)
+		} else {
+			if testingLogger, err = log.NewTestingLogger(tb, &log.Options{CallerSkip: 2}); err != nil {
+				return nil, errors.WithMessage(err, "init testing logger failed")
 			}
-			coreLogger = testingLogger
-			webLogger = testingLogger.Clone(log.AddCallerSkip(1))
-			return
-		},
-		fx.ResultTags(``, `name:"web_logger"`),
-	))
+		}
+		return testingLogger, nil
+	})
 }
