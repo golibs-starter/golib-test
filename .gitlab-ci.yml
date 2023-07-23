@@ -1,4 +1,4 @@
-image: golang:1.17
+image: golang:1.19
 
 stages:
   - test
@@ -8,7 +8,5 @@ test:
   except:
     refs:
       - tags
-  before_script:
-    - git config --global url."https://$GITLAB_USER:$GITLAB_ACCESS_TOKEN@gitlab.com/".insteadOf "https://gitlab.com/"
   script:
     - go test ./...
