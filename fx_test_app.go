@@ -3,8 +3,8 @@ package golibtest
 import (
 	"context"
 	"fmt"
+	"github.com/golibs-starter/golib/log"
 	"github.com/pkg/errors"
-	"gitlab.com/golibs-starter/golib/log"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
 	"testing"

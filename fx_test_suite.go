@@ -1,8 +1,8 @@
 package golibtest
 
 import (
+	"github.com/golibs-starter/golib"
 	"github.com/stretchr/testify/suite"
-	"gitlab.com/golibs-starter/golib"
 	"go.uber.org/fx"
 )
 
